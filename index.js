@@ -362,7 +362,16 @@ angular.module('nwas', ['ngSanitize', 'pascalprecht.translate']).controller('mai
       }
     ).catch(error => {
       $scope.$apply(function() {
-        $scope.error = error;
+       if(error.message != undefined && error.message.match("Address .*? outside of memory map")) {
+          $scope.error = $translate.instant("TOO_MUCH_FILES");
+        }
+        // Handle Unable to claim interface error
+        else if(error.message != undefined && error.message.match("Unable to claim interface")) {
+          $scope.error = $translate.instant("UNABLE_TO_CLAIM_INTERFACE");
+        }
+        else {
+          $scope.error = error;
+        }
         $scope.allDone = false;
       });
     });
@@ -487,6 +496,8 @@ angular.module('nwas', ['ngSanitize', 'pascalprecht.translate']).controller('mai
       CROP_IMAGE_TITLE: "Crop wallpaper",
       CROP_IMAGE_SAVE: "Save",
       CROP_IMAGE_CANCEL: "Cancel",
+      UNABLE_TO_CLAIM_INTERFACE: "Unable to claim interface. Please make sure that no other tab or application is using the calculator.",
+      TOO_MUCH_DATA: "You are writing too much data to your calculator. Please make sure that you are not writing more than 6MB of data. Try to remove some files or apps.",
     })
     .translations('fr', {
       TITLE: 'Dépôt d\'application N110 non officiel',
@@ -518,6 +529,9 @@ angular.module('nwas', ['ngSanitize', 'pascalprecht.translate']).controller('mai
       CROP_IMAGE_TITLE: "Recadrer le fond d'écran",
       CROP_IMAGE_SAVE: "Sauvegarder",
       CROP_IMAGE_CANCEL: "Annuler",
+      UNABLE_TO_CLAIM_INTERFACE: "Impossible de réclamer l'interface. Veuillez vous assurer qu'aucun autre onglet ou application n'utilise la calculatrice.",
+      TOO_MUCH_DATA: "Vous écrivez trop de données sur votre calculatrice. Veuillez vous assurer que vous n'écrivez pas plus de 6Mo de données. Essayez de supprimer des fichiers ou des applications.",
+
     })
     .registerAvailableLanguageKeys(['en', 'fr'], {
       'en_*': 'en',
